@@ -1,0 +1,18 @@
+
+
+
+<div class="d-flex justify-content-between mt-4">
+  <button (click)="approve()" 
+          [disabled]="loadingApprove" 
+          class="btn btn-sm-crud">
+    <span *ngIf="loadingApprove" class="spinner-border spinner-border-sm me-1"></span>
+    {{ loadingApprove ? 'Approving...' : 'Approve' }}
+  </button>
+
+  <button (click)="cancel()" 
+          [disabled]="loadingCancel" 
+          class="btn btn-danger">
+    <span *ngIf="loadingCancel" class="spinner-border spinner-border-sm me-1"></span>
+    {{ loadingCancel ? 'Cancelling...' : 'Cancel' }}
+  </button>
+</div>

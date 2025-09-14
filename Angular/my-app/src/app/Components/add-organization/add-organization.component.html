@@ -1,0 +1,298 @@
+<div class="mt-4 mb-4 container-fluid">
+  <button class="btn btn-sm-crud" (click)="showDialog()">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+  </button>
+</div>
+
+<p-dialog
+  header="Add Invoice"
+  [(visible)]="display"
+  [modal]="true"
+  [style]="{ width: '80vw' }"
+>
+  <form #invoiceForm="ngForm" (ngSubmit)="onSubmit(invoiceForm)">
+    <div class="row">
+      <!-- Select Organization -->
+      <div class="col-md-4 mb-2">
+        <div class="mb-3">
+          <label for="orgSelect" class="form-label">Select Organization</label>
+          <select
+            id="orgSelect"
+            class="form-control form-control-sm h-40"
+            (change)="onOrganizationChange($event)"
+          >
+            <option value="">-- Select --</option>
+            <option value="new">+ New invoice</option>
+            <option *ngFor="let org of organizations" [value]="org.id">
+              {{ org.organizationName }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Organization Fields -->
+      <div class="col-md-4 mb-2">
+        <label for="organizationCode" class="form-label">Organization Code</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="organizationCode"
+          name="organizationCode"
+          [(ngModel)]="organization.organizationCode"
+          required
+        />
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <label for="organizationName" class="form-label">Organization Name</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="organizationName"
+          name="organizationName"
+          [(ngModel)]="organization.organizationName"
+        />
+      </div>
+
+      <!-- Legal Entity -->
+      <div class="col-md-4 mb-2">
+        <label for="legalEntity" class="form-label">Legal Entity</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="legalEntity"
+          name="legalEntity"
+          [(ngModel)]="organization.legalEntity"
+          required
+        />
+      </div>
+
+      <!-- Remitter Bank -->
+      <div class="col-md-4 mb-2">
+        <label for="remitterBank" class="form-label">Remitter Bank</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="remitterBank"
+          name="remitterBank"
+          [(ngModel)]="organization.remitterBank"
+          required
+        />
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <label for="remitterBankAccount" class="form-label">Remitter Bank Account</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="remitterBankAccount"
+          name="remitterBankAccount"
+          [(ngModel)]="organization.remitterBankAccount"
+          required
+        />
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <label for="remitterBankAccountName" class="form-label">Bank Account Name</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="remitterBankAccountName"
+          name="remitterBankAccountName"
+          [(ngModel)]="organization.remitterBankAccountName"
+        />
+      </div>
+
+      <!-- Biller Fields -->
+      <div class="col-md-4 mb-2">
+        <label for="billerId" class="form-label">Biller ID</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="billerId"
+          name="billerId"
+          [(ngModel)]="organization.billerId"
+          required
+        />
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <label for="billerName" class="form-label">Biller Name</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="billerName"
+          name="billerName"
+          [(ngModel)]="organization.billerName"
+        />
+      </div>
+
+      <!-- Vendor Fields -->
+      <div class="col-md-4 mb-2">
+        <label for="vendorNumber" class="form-label">Vendor Number</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="vendorNumber"
+          name="vendorNumber"
+          [(ngModel)]="organization.vendorNumber"
+          required
+        />
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <label for="vendorName" class="form-label">Vendor Name</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="vendorName"
+          name="vendorName"
+          [(ngModel)]="organization.vendorName"
+        />
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <label for="vendorSiteCode" class="form-label">Vendor Site Code</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="vendorSiteCode"
+          name="vendorSiteCode"
+          [(ngModel)]="organization.vendorSiteCode"
+        />
+      </div>
+
+      <!-- Invoice Fields -->
+      <div class="col-md-4 mb-2">
+        <label for="invoiceType" class="form-label">Invoice Type</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="invoiceType"
+          name="invoiceType"
+          [(ngModel)]="organization.invoiceType"
+          required
+        />
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <label for="invoiceNumber" class="form-label">Invoice Number</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="invoiceNumber"
+          name="invoiceNumber"
+          [(ngModel)]="organization.invoiceNumber"
+          required
+        />
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <label for="subscriptionAccountNumber" class="form-label">Subscription Account</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="subscriptionAccountNumber"
+          name="subscriptionAccountNumber"
+          [(ngModel)]="organization.subscriptionAccountNumber"
+          required
+        />
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <label for="amount" class="form-label">Amount</label>
+        <input
+          type="number"
+          class="form-control form-control-sm h-40"
+          id="amount"
+          name="amount"
+          [(ngModel)]="organization.amount"
+          required
+        />
+      </div>
+
+      <!-- Expense Fields -->
+      <div class="col-md-4 mb-2">
+        <label for="expenseAccountCode" class="form-label">Expense Account Code</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="expenseAccountCode"
+          name="expenseAccountCode"
+          [(ngModel)]="organization.expenseAccountCode"
+          required
+        />
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <label for="expenseAccountName" class="form-label">Expense Account Name</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="expenseAccountName"
+          name="expenseAccountName"
+          [(ngModel)]="organization.expenseAccountName"
+        />
+      </div>
+
+      <!-- Business Fields -->
+      <div class="col-md-4 mb-2">
+        <label for="businessCode" class="form-label">Business Code</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="businessCode"
+          name="businessCode"
+          [(ngModel)]="organization.businessCode"
+          required
+        />
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <label for="businessName" class="form-label">Business Name</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="businessName"
+          name="businessName"
+          [(ngModel)]="organization.businessName"
+        />
+      </div>
+
+      <!-- Location Fields -->
+      <div class="col-md-4 mb-2">
+        <label for="locationCode" class="form-label">Location Code</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="locationCode"
+          name="locationCode"
+          [(ngModel)]="organization.locationCode"
+          required
+        />
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <label for="locationName" class="form-label">Location Name</label>
+        <input
+          type="text"
+          class="form-control form-control-sm h-40"
+          id="locationName"
+          name="locationName"
+          [(ngModel)]="organization.locationName"
+        />
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" [disabled]="isLoading" class="btn btn-teal mt-3">
+      <span
+        *ngIf="isLoading"
+        class="spinner-border spinner-border-sm me-2"
+        role="status"
+        aria-hidden="true"
+      ></span>
+      Save
+    </button>
+  </form>
+</p-dialog>

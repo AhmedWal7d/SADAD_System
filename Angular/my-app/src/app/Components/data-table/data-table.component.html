@@ -1,0 +1,212 @@
+<div class="d-flex justify-content-between container-fluid">
+  <div class="d-flex">
+    <app-add-organization
+      *ngIf=" role === 'ROLE_ENTRY'|| role=== 'ROLE_ADMIN'"
+    ></app-add-organization>
+  </div>
+  <app-logout />
+</div>
+
+<p-table
+  [value]="records"
+  [paginator]="true"
+  [rows]="5"
+  [loading]="loading"
+  [rowsPerPageOptions]="[5, 10, 20]"
+  responsiveLayout="scroll"
+>
+  <ng-template pTemplate="header">
+    <tr class="text-center">
+      <th>Organization</th>
+      <th>Expense</th>
+      <th>Business</th>
+      <th>Location</th>
+      <th>Amount</th>
+      <th>Status</th>
+      <th>Created By</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-record>
+    <tr class="text-center">
+      <td>{{ record.organizationName }}</td>
+      <td>{{ record.expenseAccountName }}</td>
+      <td>{{ record.businessName }}</td>
+      <td>{{ record.locationName }}</td>
+      <td>{{ record.amount }}</td>
+      <td
+        [ngClass]="{
+          'status-pending': record.status === 'PENDING',
+          'status-canceled': record.status === 'CANCELED',
+          'status-APPROVED': record.status === 'APPROVED'
+        }"
+      >
+        {{ record.status }}
+      </td>
+
+      <td>{{ record.createdByUsername }}</td>
+      <td>
+        <button
+          pButton
+          type="button"
+          class="btn-sm-crud btn btn-sm mx-1"
+          (click)="viewRecord(record)"
+        >
+          <i class="fa-solid fa-eye"></i>
+        </button>
+        <button
+          *ngIf="role === 'ROLE_ENTRY' || role === 'ROLE_APPROVER'"
+          pButton
+          type="button"
+          class="btn-sm-crud btn btn-sm mx-1"
+          (click)="updatePop(record)"
+        >
+          <i class="fas fa-edit"></i>
+        </button>
+        <button
+          *ngIf="role === 'ROLE_ENTRY'"
+          pButton
+          type="button"
+          class="btn-sm-crud btn btn-sm mx-1"
+          (click)="changeStatus(record)"
+        >
+          change status
+        </button>
+         <!-- *ngIf="role === 'ROLE_ENTRY'|| 'ROLE_ADMIN'" -->
+        <button
+         *ngIf="role === 'ROLE_APPROVER' || role === 'ROLE_ADMIN'"
+
+          pButton
+          type="button"
+          class="btn-sm-crud btn btn-sm mx-1"
+          (click)="cancleApprove(record)"
+        >
+          Cancel OR Approve
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+<p-dialog
+  header="Record Details"
+  [(visible)]="displayDialog"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+>
+  <div *ngIf="selectedRecord">
+    <p class="d-flex justify-content-between">
+      <strong>Organization:</strong>
+      <span>{{ selectedRecord.organizationName }}</span>
+    </p>
+    <p class="d-flex justify-content-between">
+      <strong>Biller:</strong> <span>{{ selectedRecord.billerName }}</span>
+    </p>
+    <p class="d-flex justify-content-between">
+      <strong>Vendor:</strong> <span>{{ selectedRecord.vendorName }}</span>
+    </p>
+    <p class="d-flex justify-content-between">
+      <strong>Amount:</strong> <span>{{ selectedRecord.amount }}</span>
+    </p>
+    <p class="d-flex justify-content-between">
+      <strong>Status:</strong> <span>{{ selectedRecord.status }}</span>
+    </p>
+    <p class="d-flex justify-content-between">
+      <strong>Created By:</strong>
+      <span>{{ selectedRecord.createdByUsername }}</span>
+    </p>
+    <p class="d-flex justify-content-between">
+      <strong>Invoice:</strong> <span>{{ selectedRecord.invoiceNumber }}</span>
+    </p>
+    <p class="d-flex justify-content-between">
+      <strong>Subscription:</strong>
+      <span>{{ selectedRecord.subscriptionAccountNumber }}</span>
+    </p>
+    <p class="d-flex justify-content-between">
+      <strong>Location:</strong> <span>{{ selectedRecord.locationName }}</span>
+    </p>
+
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Close"
+      icon="pi pi-times"
+      class="btn-sm-crud"
+      (click)="displayDialog = false"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+
+
+
+<div class="container-fluid">
+  <app-users   *ngIf=" role === 'ROLE_ADMIN'">  </app-users>
+</div>
+
+
+<p-dialog
+  header="Update invoice"
+  [(visible)]="displayDialogg"
+  [modal]="true"
+  [style]="{ width: '80vw' }"
+>
+  <div *ngIf="selectedRecordd">
+    <app-update-organization [recordId]="selectedRecordd?.id"></app-update-organization>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Close"
+      icon="pi pi-times"
+      class="btn-sm-crud"
+      (click)="displayDialog = false"
+    ></button>
+  </ng-template>
+</p-dialog>
+<p-dialog
+  header="Change Status"
+  [(visible)]="displayDialoggg"
+  [modal]="true"
+  [style]="{ width: '40vw' }"
+>
+  <div *ngIf="selectedRecordForStatus">
+    <app-pending-status
+      [recordId]="selectedRecordForStatus.id"
+    ></app-pending-status>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Close"
+      icon="pi pi-times"
+      class="btn-sm-crud"
+      (click)="displayDialoggg = false"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  header="Cancle OR Approve"
+  [(visible)]="canlepop"
+  [modal]="true"
+  [style]="{ width: '40vw' }"
+>
+  <div *ngIf="selectedRecordForStatus">
+    <app-agree [recordId]="selectedRecordForStatus.id"></app-agree>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="Close"
+      icon="pi pi-times"
+      class="btn-sm-crud"
+      (click)="displayDialog = false"
+    ></button>
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,19 @@
+
+.btn-teal{
+    background-color: teal;
+    color: white;
+}
+.bg-input{
+    background-color: #00808014;
+    height: 45px;
+    border: 1px solid teal;
+}
+.icone_show{
+    bottom: 100px !important;
+}
+.w-35{
+    width: 35%;
+}
+.top-50 {
+    top: 56% !important;
+}
