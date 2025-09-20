@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@//localhost:1521/orclpdb
+    username: SADAD_HR
+    password: SADAD_HR
+    driver-class-name: oracle.jdbc.OracleDriver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.OracleDialect
+
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+
+app:
+  jwt:
+    secret: u8d3vE5vH1dQ2m/3K7tQ9kLz4pXvS2bqG6h9M1yZ0cA=
+    expiration-ms: 900000
+    refresh-expiration-ms: 1209600000
