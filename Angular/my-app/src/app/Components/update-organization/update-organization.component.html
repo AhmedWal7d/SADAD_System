@@ -1,305 +1,271 @@
-
-
-
-  <form #invoiceForm="ngForm" (ngSubmit)="onSubmit(invoiceForm)">
-    <div class="row">
-      <!-- Organization -->    
-      <div class="col-md-4 mb-2">
-        <label for="organizationCode"  [(ngModel)]="formData.organizationCode" class="form-label">Organization Code</label>
-        <input
-          type="text"
-           [(ngModel)]="formData.organizationCode"
-          class="form-control form-control-sm h-40"   
-          id="organizationCode"
-          name="organizationCode"
-          ngModel
-          required
-        />
-      </div>
-
-      <div class="col-md-4 mb-2">
-        <label for="organizationName" class="form-label">Organization Name</label>
-        <input
-          type="text"
-           [(ngModel)]="formData.organizationName"
-          class="form-control form-control-sm h-40"   
-          id="organizationName"
-          name="organizationName"
-          ngModel
-          
-        />
-      </div>
-
-      <!-- Legal Entity -->
-      <div class="col-md-4 mb-2">
-        <label for="legalEntity" class="form-label">Legal Entity</label>
-        <input
-          type="text"
-           [(ngModel)]="formData.legalEntity"
-          class="form-control form-control-sm h-40"   
-          id="legalEntity"
-          name="legalEntity"
-          ngModel
-          required
-        />
-      </div>
-
-      <!-- Remitter Bank -->
-      <div class="col-md-4 mb-2">
-        <label for="remitterBank" class="form-label">Remitter Bank</label>
-        <input
-          type="text"
-
-          class="form-control form-control-sm h-40"  
-           [(ngModel)]="formData.remitterBank" 
-          id="remitterBank"
-          name="remitterBank"
-          ngModel
-          required
-        />
-      </div>
-
-      <div class="col-md-4 mb-2">
-        <label for="remitterBankAccount" class="form-label">Remitter Bank Account</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40"   
-           [(ngModel)]="formData.remitterBankAccount" 
-          id="remitterBankAccount"
-          name="remitterBankAccount"
-          ngModel
-          required
-        />
-      </div>
-
-      <div class="col-md-4 mb-2">
-        <label for="remitterBankAccountName" class="form-label">Bank Account Name</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40"
-           [(ngModel)]="formData.remitterBankAccountName" 
-          id="remitterBankAccountName"
-          name="remitterBankAccountName"
-          ngModel
-        
-        />
-      </div>
-
-      <!-- Biller -->
-      <div class="col-md-4 mb-2">
-        <label for="billerId" class="form-label">Biller ID</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40" 
-          [(ngModel)]="formData.billerId"
-          id="billerId"
-          name="billerId"
-          ngModel
-          required
-        />
-      </div>
-
-      <div class="col-md-4 mb-2">
-        <label for="billerName" class="form-label">Biller Name</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40" 
-          [(ngModel)]="formData.billerName" 
-          id="billerName"
-          name="billerName"
-          ngModel
-          
-        />
-      </div>
-
-      <!-- Vendor -->
-      <div class="col-md-4 mb-2">
-        <label for="vendorNumber" class="form-label">Vendor Number</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40" 
-          [(ngModel)]="formData.vendorNumber" 
-          id="vendorNumber"
-          name="vendorNumber"
-          ngModel
-          required
-        />
-      </div>
-
-      <div class="col-md-4 mb-2">
-        <label for="vendorName" class="form-label">Vendor Name</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40"
-           [(ngModel)]="formData.vendorName" 
-          id="vendorName"
-          name="vendorName"
-          ngModel
-          
-        />
-      </div>
-
-      <div class="col-md-4 mb-2">
-        <label for="vendorSiteCode" class="form-label">Vendor Site Code</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40" 
-           [(ngModel)]="formData.vendorSiteCode" 
-          id="vendorSiteCode"
-          name="vendorSiteCode"
-          ngModel
-        />
-      </div>
-
-      <!-- Invoice -->
-      <div class="col-md-4 mb-2">
-        <label for="invoiceType" class="form-label">Invoice Type</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40" 
-          [(ngModel)]="formData.invoiceType" 
-          id="invoiceType"
-          name="invoiceType"
-          ngModel
-          required
-        />
-      </div>
-
-      <div class="col-md-4 mb-2">
-        <label for="invoiceNumber" class="form-label">Invoice Number</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40" 
-          [(ngModel)]="formData.invoiceNumber" 
-          id="invoiceNumber"
-          name="invoiceNumber"
-          ngModel
-          required
-        />
-      </div>
-
-      <div class="col-md-4 mb-2">
-        <label for="subscriptionAccountNumber" class="form-label">Subscription Account</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40" 
-          [(ngModel)]="formData.subscriptionAccountNumber" 
-          id="subscriptionAccountNumber"
-          name="subscriptionAccountNumber"
-          ngModel
-          required
-        />
-      </div>
-
-      <div class="col-md-4 mb-2">
-        <label for="amount" class="form-label">Amount</label>
-        <input
-          type="number"
-          class="form-control form-control-sm h-40" 
-          [(ngModel)]="formData.amount" 
-          id="amount"
-          name="amount"
-          ngModel
-          required
-        />
-      </div>
-
-      <!-- Expense -->
-      <div class="col-md-4 mb-2">
-        <label for="expenseAccountCode" class="form-label">Expense Account Code</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40" 
-          [(ngModel)]="formData.expenseAccountCode" 
-          id="expenseAccountCode"
-          name="expenseAccountCode"
-          ngModel
-          required
-        />
-      </div>
-
-      <div class="col-md-4 mb-2">
-        <label for="expenseAccountName" class="form-label">Expense Account Name</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40" 
-          [(ngModel)]="formData.expenseAccountName" 
-          id="expenseAccountName"
-          name="expenseAccountName"
-          ngModel
-          
-        />
-      </div>
-
-      <!-- Business -->
-      <div class="col-md-4 mb-2">
-        <label for="businessCode" class="form-label">Business Code</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40" 
-          [(ngModel)]="formData.businessCode" 
-          id="businessCode"
-          name="businessCode"
-          ngModel
-          required
-        />
-      </div>
-
-      <div class="col-md-4 mb-2">
-        <label for="businessName" class="form-label">Business Name</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40" 
-          [(ngModel)]="formData.businessName" 
-          id="businessName"
-          name="businessName"
-          ngModel
-          
-        />
-      </div>
-
-      <!-- Location -->
-      <div class="col-md-4 mb-2">
-        <label for="locationCode" class="form-label">Location Code</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40" 
-           [(ngModel)]="formData.locationCode" 
-          id="locationCode"
-          name="locationCode"
-          ngModel
-          required
-        />
-      </div>
-
-      <div class="col-md-4 mb-2">
-        <label for="locationName" class="form-label">Location Name</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40"
-           [(ngModel)]="formData.locationName"
-          id="locationName"
-          name="locationName"
-          ngModel
-          
-        />
-      </div>
+<form #invoiceForm="ngForm" (ngSubmit)="onSubmit(invoiceForm)">
+  <div class="row">
+    <!-- Organization -->
+    <div class="col-md-4 mb-2">
+      <label for="organizationCode" class="form-label">Organization Code</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.organizationCode"
+        class="form-control form-control-sm h-40"
+        id="organizationCode"
+        name="organizationCode"
+        required
+      />
     </div>
 
+    <div class="col-md-4 mb-2">
+      <label for="organizationName" class="form-label">Organization Name</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.organizationName"
+        class="form-control form-control-sm h-40"
+        id="organizationName"
+        name="organizationName"
+      />
+    </div>
 
-    <!-- Submit -->
-    <button
-      type="submit"
-      [disabled]="isLoading"
-      class="btn btn-sm-crud mt-3"
-    >
-      <span
-        *ngIf="isLoading"
-        class="spinner-border spinner-border-sm me-2"
-        role="status"
-        aria-hidden="true"
-      ></span>
-      Save
-    </button>
-  </form>
-<!-- </p-dialog> -->
+    <!-- Legal Entity -->
+    <div class="col-md-4 mb-2">
+      <label for="legalEntity" class="form-label">Legal Entity</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.legalEntity"
+        class="form-control form-control-sm h-40"
+        id="legalEntity"
+        name="legalEntity"
+        required
+      />
+    </div>
+
+    <!-- Remitter Bank -->
+    <div class="col-md-4 mb-2">
+      <label for="remitterBank" class="form-label">Remitter Bank</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.remitterBank"
+        class="form-control form-control-sm h-40"
+        id="remitterBank"
+        name="remitterBank"
+        required
+      />
+    </div>
+
+    <div class="col-md-4 mb-2">
+      <label for="remitterBankAccount" class="form-label">Remitter Bank Account</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.remitterBankAccount"
+        class="form-control form-control-sm h-40"
+        id="remitterBankAccount"
+        name="remitterBankAccount"
+        required
+      />
+    </div>
+
+    <div class="col-md-4 mb-2">
+      <label for="remitterBankAccountName" class="form-label">Bank Account Name</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.remitterBankAccountName"
+        class="form-control form-control-sm h-40"
+        id="remitterBankAccountName"
+        name="remitterBankAccountName"
+      />
+    </div>
+
+    <!-- Biller -->
+    <div class="col-md-4 mb-2">
+      <label for="billerId" class="form-label">Biller ID</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.billerId"
+        class="form-control form-control-sm h-40"
+        id="billerId"
+        name="billerId"
+        required
+      />
+    </div>
+
+    <div class="col-md-4 mb-2">
+      <label for="billerName" class="form-label">Biller Name</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.billerName"
+        class="form-control form-control-sm h-40"
+        id="billerName"
+        name="billerName"
+      />
+    </div>
+
+    <!-- Vendor -->
+    <div class="col-md-4 mb-2">
+      <label for="vendorNumber" class="form-label">Vendor Number</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.vendorNumber"
+        class="form-control form-control-sm h-40"
+        id="vendorNumber"
+        name="vendorNumber"
+        required
+      />
+    </div>
+
+    <div class="col-md-4 mb-2">
+      <label for="vendorName" class="form-label">Vendor Name</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.vendorName"
+        class="form-control form-control-sm h-40"
+        id="vendorName"
+        name="vendorName"
+      />
+    </div>
+
+    <div class="col-md-4 mb-2">
+      <label for="vendorSiteCode" class="form-label">Vendor Site Code</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.vendorSiteCode"
+        class="form-control form-control-sm h-40"
+        id="vendorSiteCode"
+        name="vendorSiteCode"
+      />
+    </div>
+
+    <!-- Invoice -->
+    <div class="col-md-4 mb-2">
+      <label for="invoiceType" class="form-label">Invoice Type</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.invoiceType"
+        class="form-control form-control-sm h-40"
+        id="invoiceType"
+        name="invoiceType"
+        required
+      />
+    </div>
+
+    <div class="col-md-4 mb-2">
+      <label for="invoiceNumber" class="form-label">Invoice Number</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.invoiceNumber"
+        class="form-control form-control-sm h-40"
+        id="invoiceNumber"
+        name="invoiceNumber"
+        required
+      />
+    </div>
+
+    <div class="col-md-4 mb-2">
+      <label for="subscriptionAccountNumber" class="form-label">Subscription Account</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.subscriptionAccountNumber"
+        class="form-control form-control-sm h-40"
+        id="subscriptionAccountNumber"
+        name="subscriptionAccountNumber"
+        required
+      />
+    </div>
+
+    <div class="col-md-4 mb-2">
+      <label for="amount" class="form-label">Amount</label>
+      <input
+        type="number"
+        [(ngModel)]="formData.amount"
+        class="form-control form-control-sm h-40"
+        id="amount"
+        name="amount"
+        required
+      />
+    </div>
+
+    <!-- Expense -->
+    <div class="col-md-4 mb-2">
+      <label for="expenseAccountCode" class="form-label">Expense Account Code</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.expenseAccountCode"
+        class="form-control form-control-sm h-40"
+        id="expenseAccountCode"
+        name="expenseAccountCode"
+        required
+      />
+    </div>
+
+    <div class="col-md-4 mb-2">
+      <label for="expenseAccountName" class="form-label">Expense Account Name</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.expenseAccountName"
+        class="form-control form-control-sm h-40"
+        id="expenseAccountName"
+        name="expenseAccountName"
+      />
+    </div>
+
+    <!-- Business -->
+    <div class="col-md-4 mb-2">
+      <label for="businessCode" class="form-label">Business Code</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.businessCode"
+        class="form-control form-control-sm h-40"
+        id="businessCode"
+        name="businessCode"
+        required
+      />
+    </div>
+
+    <div class="col-md-4 mb-2">
+      <label for="businessName" class="form-label">Business Name</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.businessName"
+        class="form-control form-control-sm h-40"
+        id="businessName"
+        name="businessName"
+      />
+    </div>
+
+    <!-- Location -->
+    <div class="col-md-4 mb-2">
+      <label for="locationCode" class="form-label">Location Code</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.locationCode"
+        class="form-control form-control-sm h-40"
+        id="locationCode"
+        name="locationCode"
+        required
+      />
+    </div>
+
+    <div class="col-md-4 mb-2">
+      <label for="locationName" class="form-label">Location Name</label>
+      <input
+        type="text"
+        [(ngModel)]="formData.locationName"
+        class="form-control form-control-sm h-40"
+        id="locationName"
+        name="locationName"
+      />
+    </div>
+  </div>
+
+  <!-- Submit -->
+  <button
+    type="submit"
+    [disabled]="isLoading"
+    class="btn btn-sm-crud mt-3"
+  >
+    <span
+      *ngIf="isLoading"
+      class="spinner-border spinner-border-sm me-2"
+      role="status"
+      aria-hidden="true"
+    ></span>
+    Save
+  </button>
+</form>

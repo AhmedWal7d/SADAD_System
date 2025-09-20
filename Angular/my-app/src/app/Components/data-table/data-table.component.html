@@ -1,29 +1,82 @@
 <div class="d-flex justify-content-between container-fluid">
   <div class="d-flex">
-    <app-add-organization
-      *ngIf=" role === 'ROLE_ENTRY'|| role=== 'ROLE_ADMIN'"
-    ></app-add-organization>
+    <app-add-organization></app-add-organization>
   </div>
   <app-logout />
 </div>
 
+<div class="my-2">
+  <input
+    pInputText
+    type="text"
+    placeholder="🔍 Search..."
+    (input)="onGlobalFilter($event)"
+    class="form-control h-search"
+  />
+</div>
+
 <p-table
+  #dt
   [value]="records"
   [paginator]="true"
   [rows]="5"
   [loading]="loading"
   [rowsPerPageOptions]="[5, 10, 20]"
   responsiveLayout="scroll"
+  [globalFilterFields]="[
+    'organizationName',
+    'expenseAccountName',
+    'businessName',
+    'locationName',
+    'amount',
+    'status',
+    'createdByUsername'
+  ]"
 >
   <ng-template pTemplate="header">
     <tr class="text-center">
-      <th>Organization</th>
-      <th>Expense</th>
-      <th>Business</th>
-      <th>Location</th>
-      <th>Amount</th>
-      <th>Status</th>
-      <th>Created By</th>
+      <th pSortableColumn="organizationName">
+        Organization
+        <p-columnFilter field="organizationName" matchMode="contains"></p-columnFilter>
+      </th>
+      <th pSortableColumn="expenseAccountName">
+        Expense
+        <p-columnFilter field="expenseAccountName" matchMode="contains"></p-columnFilter>
+      </th>
+      <th pSortableColumn="businessName">
+        Business
+        <p-columnFilter field="businessName" matchMode="contains"></p-columnFilter>
+      </th>
+      <th pSortableColumn="locationName">
+        Location
+        <p-columnFilter field="locationName" matchMode="contains"></p-columnFilter>
+      </th>
+      <th pSortableColumn="amount">
+        Amount
+        <p-columnFilter field="amount" matchMode="gte" display="menu"></p-columnFilter>
+      </th>
+      <th pSortableColumn="status">
+        Status
+        <p-columnFilter
+          field="status"
+          matchMode="equals"
+          [showMenu]="false"
+          type="text"
+        >
+          <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+            <p-dropdown
+              [options]="statusOptions"
+              [ngModel]="value"
+              (onChange)="filter($event.value)"
+              placeholder="Select status"
+              [showClear]="true"
+              [appendTo]="'body'"
+              styleClass="w-100"
+            ></p-dropdown>
+          </ng-template>
+        </p-columnFilter>
+      </th>
+     
       <th>Actions</th>
     </tr>
   </ng-template>
@@ -37,17 +90,17 @@
       <td>{{ record.amount }}</td>
       <td
         [ngClass]="{
-          'status-pending': record.status === 'PENDING',
-          'status-canceled': record.status === 'CANCELED',
-          'status-APPROVED': record.status === 'APPROVED'
+          'status-pending': record.status === 'SAVED',
+          'status-canceled': record.status === 'FAILED',
+          'status-COMPLETED': record.status === 'COMPLETED',
+          'status-approved': record.status === 'APPROVED'
         }"
       >
         {{ record.status }}
       </td>
-
-      <td>{{ record.createdByUsername }}</td>
-      <td>
-        <button
+      <td class="d-flex">
+      <div class="d-flex">
+          <button
           pButton
           type="button"
           class="btn-sm-crud btn btn-sm mx-1"
@@ -55,6 +108,25 @@
         >
           <i class="fa-solid fa-eye"></i>
         </button>
+
+
+
+
+          <button
+          pButton
+           *ngIf="role === 'ROLE_RELEASER'"
+          type="button"
+          class="btn-sm-crud btn btn-sm mx-1"
+         (click)="openStatusDialog(record)"
+        >
+        change status
+        </button>
+
+
+
+
+
+
         <button
           *ngIf="role === 'ROLE_ENTRY' || role === 'ROLE_APPROVER'"
           pButton
@@ -63,20 +135,11 @@
           (click)="updatePop(record)"
         >
           <i class="fas fa-edit"></i>
-        </button>
-        <button
-          *ngIf="role === 'ROLE_ENTRY'"
-          pButton
-          type="button"
-          class="btn-sm-crud btn btn-sm mx-1"
-          (click)="changeStatus(record)"
-        >
-          change status
-        </button>
-         <!-- *ngIf="role === 'ROLE_ENTRY'|| 'ROLE_ADMIN'" -->
-        <button
-         *ngIf="role === 'ROLE_APPROVER' || role === 'ROLE_ADMIN'"
+        </button> 
+      </div>
 
+    <button
+          *ngIf="role === 'ROLE_APPROVER' || role === 'ROLE_ADMIN'"
           pButton
           type="button"
           class="btn-sm-crud btn btn-sm mx-1"
@@ -88,125 +151,92 @@
     </tr>
   </ng-template>
 </p-table>
+
 <p-dialog
-  header="Record Details"
+  header="📄 View Record"
   [(visible)]="displayDialog"
   [modal]="true"
-  [style]="{ width: '50vw' }"
+  [style]="{ width: '40vw' }"
+  (onHide)="selectedRecord = null"
 >
-  <div *ngIf="selectedRecord">
-    <p class="d-flex justify-content-between">
-      <strong>Organization:</strong>
-      <span>{{ selectedRecord.organizationName }}</span>
-    </p>
-    <p class="d-flex justify-content-between">
-      <strong>Biller:</strong> <span>{{ selectedRecord.billerName }}</span>
-    </p>
-    <p class="d-flex justify-content-between">
-      <strong>Vendor:</strong> <span>{{ selectedRecord.vendorName }}</span>
-    </p>
-    <p class="d-flex justify-content-between">
-      <strong>Amount:</strong> <span>{{ selectedRecord.amount }}</span>
-    </p>
-    <p class="d-flex justify-content-between">
-      <strong>Status:</strong> <span>{{ selectedRecord.status }}</span>
-    </p>
-    <p class="d-flex justify-content-between">
-      <strong>Created By:</strong>
-      <span>{{ selectedRecord.createdByUsername }}</span>
-    </p>
-    <p class="d-flex justify-content-between">
-      <strong>Invoice:</strong> <span>{{ selectedRecord.invoiceNumber }}</span>
-    </p>
-    <p class="d-flex justify-content-between">
-      <strong>Subscription:</strong>
-      <span>{{ selectedRecord.subscriptionAccountNumber }}</span>
-    </p>
-    <p class="d-flex justify-content-between">
-      <strong>Location:</strong> <span>{{ selectedRecord.locationName }}</span>
-    </p>
-
-  </div>
-
-  <ng-template pTemplate="footer">
-    <button
-      pButton
-      label="Close"
-      icon="pi pi-times"
-      class="btn-sm-crud"
-      (click)="displayDialog = false"
-    ></button>
-  </ng-template>
-</p-dialog>
-
-
-
-
-<div class="container-fluid">
-  <app-users   *ngIf=" role === 'ROLE_ADMIN'">  </app-users>
+<div *ngIf="selectedRecord" class="p-3">
+  <h5>Record Details</h5>
+  <ul class="list-group">
+    <li class="list-group-item"><b>ID:</b> {{ selectedRecord.id }}</li>
+    <li class="list-group-item"><b>Organization Code:</b> {{ selectedRecord.organizationCode }}</li>
+    <li class="list-group-item"><b>Organization Name:</b> {{ selectedRecord.organizationName }}</li>
+    <li class="list-group-item"><b>Legal Entity:</b> {{ selectedRecord.legalEntity }}</li>
+    <li class="list-group-item"><b>Remitter Bank:</b> {{ selectedRecord.remitterBank }}</li>
+    <li class="list-group-item"><b>Remitter Account:</b> {{ selectedRecord.remitterBankAccount }}</li>
+    <li class="list-group-item"><b>Remitter Account Name:</b> {{ selectedRecord.remitterBankAccountName }}</li>
+    <li class="list-group-item"><b>Biller ID:</b> {{ selectedRecord.billerId }}</li>
+    <li class="list-group-item"><b>Biller Name:</b> {{ selectedRecord.billerName }}</li>
+    <li class="list-group-item"><b>Vendor Number:</b> {{ selectedRecord.vendorNumber }}</li>
+    <li class="list-group-item"><b>Vendor Name:</b> {{ selectedRecord.vendorName }}</li>
+    <li class="list-group-item"><b>Vendor Site Code:</b> {{ selectedRecord.vendorSiteCode }}</li>
+    <li class="list-group-item"><b>Invoice Type:</b> {{ selectedRecord.invoiceType }}</li>
+    <li class="list-group-item"><b>Invoice Number:</b> {{ selectedRecord.invoiceNumber }}</li>
+    <li class="list-group-item"><b>Subscription Account:</b> {{ selectedRecord.subscriptionAccountNumber }}</li>
+    <li class="list-group-item"><b>Amount:</b> {{ selectedRecord.amount }}</li>
+    <li class="list-group-item"><b>Expense Account:</b> {{ selectedRecord.expenseAccountName }} ({{ selectedRecord.expenseAccountCode }})</li>
+    <li class="list-group-item"><b>Business:</b> {{ selectedRecord.businessName }} ({{ selectedRecord.businessCode }})</li>
+    <li class="list-group-item"><b>Location:</b> {{ selectedRecord.locationName }} ({{ selectedRecord.locationCode }})</li>
+    <li class="list-group-item"><b>Status:</b> {{ selectedRecord.status }}</li>
+    <li class="list-group-item"><b>Created By:</b> {{ selectedRecord.createdByUsername }}</li>
+    <li class="list-group-item"><b>Created At:</b> {{ selectedRecord.createdAt | date:'short' }}</li>
+    <li class="list-group-item"><b>Updated At:</b> {{ selectedRecord.updatedAt || '---' }}</li>
+    <li class="list-group-item"><b>Updated By:</b> {{ selectedRecord.updatedBy || '---' }}</li>
+  </ul>
 </div>
 
+</p-dialog>
 
 <p-dialog
-  header="Update invoice"
+  header="✏ Update Record"
   [(visible)]="displayDialogg"
   [modal]="true"
-  [style]="{ width: '80vw' }"
+  [style]="{ width: '50vw' }"
+  (onHide)="selectedRecordd = null"
 >
-  <div *ngIf="selectedRecordd">
-    <app-update-organization [recordId]="selectedRecordd?.id"></app-update-organization>
-  </div>
-
-  <ng-template pTemplate="footer">
-    <button
-      pButton
-      label="Close"
-      icon="pi pi-times"
-      class="btn-sm-crud"
-      (click)="displayDialog = false"
-    ></button>
-  </ng-template>
+  <app-update-organization
+    *ngIf="selectedRecordd"
+    [record]="selectedRecordd"
+  ></app-update-organization>
 </p-dialog>
+
 <p-dialog
   header="Change Status"
   [(visible)]="displayDialoggg"
   [modal]="true"
-  [style]="{ width: '40vw' }"
+  [style]="{ width: '30vw' }"
+  (onHide)="selectedRecordForStatus = null"
 >
-  <div *ngIf="selectedRecordForStatus">
-    <app-pending-status
-      [recordId]="selectedRecordForStatus.id"
-    ></app-pending-status>
-  </div>
-
-  <ng-template pTemplate="footer">
-    <button
-      pButton
-      label="Close"
-      icon="pi pi-times"
-      class="btn-sm-crud"
-      (click)="displayDialoggg = false"
-    ></button>
-  </ng-template>
+  <app-pending-status
+    *ngIf="selectedRecordForStatus"
+    [record]="selectedRecordForStatus"
+  ></app-pending-status>
 </p-dialog>
-
 <p-dialog
-  header="Cancle OR Approve"
-  [(visible)]="canlepop"
+  header="Change Status"
+  [(visible)]="showStatusDialog"
   [modal]="true"
   [style]="{ width: '40vw' }"
+  (onHide)="selectedId = null"
 >
-  <div *ngIf="selectedRecordForStatus">
-    <app-agree [recordId]="selectedRecordForStatus.id"></app-agree>
-  </div>
+<app-sadad-release *ngIf="selectedId" [id]="selectedId"></app-sadad-release>
+</p-dialog>
 
-  <ng-template pTemplate="footer">
-    <button
-      pButton
-      label="Close"
-      icon="pi pi-times"
-      class="btn-sm-crud"
-      (click)="displayDialog = false"
-    ></button>
-  </ng-template>
+
+<p-dialog
+  header="⚖ Cancel / Approve"
+  [(visible)]="canlepop"
+  [modal]="true"
+  [style]="{ width: '30vw' }"
+  (onHide)="selectedRecordForStatus = null"
+>
+<app-agree
+  *ngIf="selectedRecordForStatus"
+  [recordId]="selectedRecordForStatus"
+></app-agree>
+
 </p-dialog>

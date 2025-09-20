@@ -1,0 +1,371 @@
+import { Component } from '@angular/core';
+import { CommonModule, NgClass, NgFor, NgIf } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
+import { DialogModule } from 'primeng/dialog';
+import { ToastrService } from 'ngx-toastr';
+import axios from 'axios';
+
+@Component({
+  selector: 'app-add-organization',
+  standalone: true,
+  imports: [DialogModule, FormsModule, NgClass, CommonModule, NgFor, NgIf],
+  templateUrl: './add-organization.component.html',
+  styleUrls: ['./add-organization.component.css']
+})
+export class AddOrganizationComponent {
+  display = false;
+  isLoading = false;
+
+  organizations: Array<{ code: string, name: string }> = [];
+  legalEntities: Array<{ code: string, name: string }> = [];
+  remitterBanks: Array<{ code: string, name: string }> = [];
+  remitterBankAccounts: Array<{ code: string, name: string }> = [];
+  billers: Array<{ code: string, name: string }> = [];
+  vendors: Array<{ code: string, name: string }> = [];
+  vendorSites: Array<{ code: string, name: string }> = [];
+  expenseAccounts: Array<{ code: string, name: string }> = [];
+  businesses: Array<{ code: string, name: string }> = [];
+  locations: Array<{ code: string, name: string }> = [];
+  costCenters: Array<{ code: string, name: string }> = [];
+
+  invoiceTypes = ['Utility', 'Services', 'Other'];
+
+  organization: any = this.emptyOrganization();
+
+  private apiUrl = 'http://localhost:8080/api/lov';
+
+  constructor(private toastr: ToastrService) {}
+
+onOrganizationChange(event: Event) {
+  const select = event.target as HTMLSelectElement | null;
+  if (!select) return;
+
+  const orgCode = select.value;
+  this.organization.organizationCode = orgCode;
+
+  const org = this.organizations.find(o => o.code === orgCode);
+  this.organization.organizationName = org?.name ?? '';
+
+  // Reset
+  this.vendors = [];
+  this.remitterBanks = [];
+  this.remitterBankAccounts = [];
+
+  if (orgCode) {
+    this.loadSuppliers(orgCode);
+    this.loadBanksByOrganization(orgCode);
+  }
+}
+
+
+
+
+  private emptyOrganization() {
+    return {
+      organizationCode: '',
+      organizationName: '',
+      legalEntity: '',
+      billerId: '',
+      billerName: '',
+      remitterBank: '',
+      remitterBankAccount: '',
+      remitterBankAccountName: '',
+      vendorNumber: '',
+      vendorName: '',
+      code: '',
+      vendorSiteCode: '',
+      invoiceType: '',
+      invoiceNumber: '',
+      subscriptionAccountNumber: '',
+      amount: null,
+      expenseAccountCode: '',
+      expenseAccountName: '',
+      businessCode: '',
+      businessName: '',
+      locationCode: '',
+      locationName: '',
+      costCenters: [] as Array<{ costCenterCode: string, costCenterDesc: string, percentage: number }>
+    };
+  }
+onVendorChange(event: any) {
+  const selected = this.vendors.find(v => v.code === this.organization.vendorNumber);
+  this.organization.vendorName = selected ? selected.name : '';
+}
+
+  async ngOnInit() {
+    const endpoints = [
+      { endpoint: 'organizations', target: 'organizations' },
+      { endpoint: 'legal-entities', target: 'legalEntities' },
+      { endpoint: 'billers', target: 'billers' },
+      { endpoint: 'expense-accounts', target: 'expenseAccounts' },
+      { endpoint: 'business-units', target: 'businesses' },
+      { endpoint: 'locations', target: 'locations' },
+      { endpoint: 'cost-centers', target: 'costCenters' }
+    ];
+
+    await Promise.all(endpoints.map(e => this.loadData(e.endpoint, e.target)));
+  }
+
+  private async loadData(endpoint: string, target: string) {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await axios.get(`${this.apiUrl}/${endpoint}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      });
+
+      let raw = res.data?.data ?? res.data ?? [];
+      if (!Array.isArray(raw)) raw = [];
+
+      const normalized = raw.map((it: any) => {
+        const code = it.code ?? it.id ?? it.organizationCode ?? it.vendorNumber ?? it.billerId ?? it.accountCode ?? it.expenseAccountCode ?? it.businessCode ?? it.locationCode ?? it.costCenterCode ?? '';
+        const name = it.name ?? it.organizationName ?? it.vendorName ?? it.accountName ?? it.billerName ?? it.expenseAccountName ?? it.businessName ?? it.locationName ?? it.costCenterDesc ?? '';
+        
+        return { code: String(code), name: String(name) };
+      });
+
+      (this as any)[target] = normalized;
+      console.debug(`Loaded ${target}`, (this as any)[target]);
+    } catch (err) {
+      console.error(`Failed to load ${target}`, err);
+      this.toastr.error(`Failed to load ${target}`);
+      (this as any)[target] = [];
+    }
+  }
+  // دالة عامة لأي سيلكت فيه code و name
+onGenericSelect(event: Event, list: Array<{code:string,name:string}>, codeProp: string, nameProp: string) {
+  const code = (event.target as HTMLSelectElement).value;
+  const item = list.find(i => i.code == code);
+  (this.organization as any)[codeProp] = item?.code ?? '';
+  (this.organization as any)[nameProp] = item?.name ?? '';
+}
+
+// دالة لحساب التغيير في cost center
+onCostCenterChange(event: Event, index: number) {
+  const code = (event.target as HTMLSelectElement).value;
+  const cc = this.costCenters.find(c => c.code === code);
+  this.organization.costCenters[index].costCenterDesc = cc?.name ?? '';
+}
+
+
+  showDialog() {
+    this.organization = this.emptyOrganization();
+    this.display = true;
+  }
+
+
+
+
+
+async loadVendorSites(vendorCode: string) {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await axios.get(`${this.apiUrl}/vendor-sites`, {
+      params: { vendorCode },
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    });
+
+    let raw = res.data?.data ?? res.data ?? [];
+    if (!Array.isArray(raw)) raw = [];
+    
+
+    this.vendorSites = raw.map((vs: any) => ({
+      code: vs.code ?? vs.siteCode ?? '',
+      name: vs.name ?? vs.siteName ?? ''
+    }));
+  } catch (err) {
+    console.error('Failed to load vendor sites', err);
+    this.toastr.error('Failed to load vendor sites');
+    this.vendorSites = [];
+  }
+}
+
+
+
+
+async loadSuppliers(orgCode: string) {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await axios.get(`${this.apiUrl}/suppliers?organizationCode=${orgCode}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    });
+
+    let raw = res.data?.data ?? res.data ?? [];
+    if (!Array.isArray(raw)) raw = [];
+
+    this.vendors = raw.map((v: any) => ({
+      code: v.code ?? v.vendorNumber ?? '',
+      name: v.name ?? v.vendorName ?? ''
+    }));
+
+    console.debug('Loaded suppliers:', this.vendors);
+  } catch (err) {
+    console.error('Failed to load suppliers', err);
+    this.toastr.error('Failed to load suppliers');
+    this.vendors = [];
+  }
+}
+
+onSupplierChange(event: Event) {
+  const supplierCode = (event.target as HTMLSelectElement).value;
+  this.organization.vendorNumber = supplierCode;
+
+  const supplier = this.vendors.find(s => s.code === supplierCode);
+  this.organization.vendorName = supplier?.name ?? '';
+
+  // Reset
+  this.remitterBanks = [];
+
+  if (supplierCode && this.organization.organizationCode) {
+    this.loadBanksByOrganizationAndSupplier(this.organization.organizationCode, supplierCode);
+    this.loadVendorSites(supplierCode); // 👈 أضف دي
+  }
+}
+
+
+
+
+  async loadBanksByOrganization(orgCode: string) {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await axios.get(`${this.apiUrl}/banks?organizationCode=${encodeURIComponent(orgCode)}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      });
+      let raw = res.data?.data ?? res.data ?? [];
+      if (!Array.isArray(raw)) raw = [];
+      this.remitterBanks = raw.map((b: any) => ({ code: b.code ?? b.bankCode ?? '', name: b.name ?? b.bankName ?? '' }));
+      console.debug('banks for', orgCode, this.remitterBanks);
+    } catch (err) {
+      console.error('Failed to fetch banks', err);
+      this.toastr.error('Failed to fetch banks');
+      this.remitterBanks = [];
+    }
+  }
+onRemitterBankChange(event: Event) {
+  const bankCode = (event.target as HTMLSelectElement).value;
+  this.organization.remitterBank = bankCode;
+
+  // Reset
+  this.remitterBankAccounts = [];
+  this.organization.remitterBankAccount = '';
+  this.organization.remitterBankAccountName = '';
+
+  if (bankCode) {
+    this.loadBankAccounts(bankCode);
+  }
+}
+
+
+async loadBankAccounts(bankCode: string) {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await axios.get(`${this.apiUrl}/bank-accounts`, {
+      params: { bankCode },
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    });
+
+    let raw = res.data?.data ?? res.data ?? [];
+    if (!Array.isArray(raw)) raw = [];
+
+    this.remitterBankAccounts = raw.map((acc: any) => ({
+      code: acc.code ?? acc.accountNumber ?? acc.id ?? '',
+      name: acc.name ?? acc.accountName ?? acc.description ?? ''
+    }));
+  } catch (err) {
+    console.error('Failed to fetch bank accounts', err);
+    this.toastr.error('Failed to fetch bank accounts');
+    this.remitterBankAccounts = [];
+  }
+}
+
+
+ onRemitterBankAccountChange(event: Event) {
+  const accountCode = (event.target as HTMLSelectElement).value;
+  this.organization.remitterBankAccount = accountCode;
+  this.organization.remitterBankAccountName = '';
+
+  if (accountCode) {
+    this.loadBankAccountName(accountCode);
+  }
+}
+
+  async loadBanksByOrganizationAndSupplier(orgCode: string, supplierCode: string) {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await axios.get(`${this.apiUrl}/banks`, {
+      params: { organizationCode: orgCode, supplierCode: supplierCode },
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    });
+
+    let raw = res.data?.data ?? res.data ?? [];
+    if (!Array.isArray(raw)) raw = [];
+    this.remitterBanks = raw.map((b: any) => ({
+      code: b.code ?? b.bankCode ?? '',
+      name: b.name ?? b.bankName ?? ''
+    }));
+
+    console.debug('banks for organization and supplier', orgCode, supplierCode, this.remitterBanks);
+  } catch (err) {
+    console.error('Failed to fetch banks', err);
+    this.toastr.error('Failed to fetch banks');
+    this.remitterBanks = [];
+  }
+}
+
+
+async loadBankAccountName(accountNumber: string) {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await axios.get(`${this.apiUrl}/bank-account-name`, {
+      params: { accountNumber },
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    });
+
+    this.organization.remitterBankAccountName = res.data?.name ?? res.data?.accountName ?? '';
+  } catch (err) {
+    console.error('Failed to fetch bank account name', err);
+    this.toastr.error('Failed to fetch bank account name');
+    this.organization.remitterBankAccountName = '';
+  }
+}
+
+
+  onSubmit(form: NgForm) {
+    if (form.invalid) {
+      this.toastr.warning('Please fill all required fields');
+      return;
+    }
+
+    const totalPercentage = this.organization.costCenters.reduce((sum: number, cc: any) => sum + Number(cc.percentage || 0), 0);
+    if (totalPercentage !== 100) {
+      this.toastr.warning('Total cost center percentage must be 100%');
+      return;
+    }
+
+    this.isLoading = true;
+    axios.post('http://localhost:8080/api/sadad', this.organization, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+    .then(() => {
+      this.toastr.success('SADAD record saved');
+      this.display = false;
+      form.resetForm();
+      this.resetForm();
+    })
+    .catch(err => {
+      console.error('Failed to save SADAD', err);
+      this.toastr.error('Failed to save SADAD');
+    })
+    .finally(() => this.isLoading = false);
+  }
+
+  private resetForm() {
+    this.organization = this.emptyOrganization();
+    this.remitterBankAccounts = [];
+    this.vendors = [];
+    this.vendorSites = [];
+  }
+}
+NG1: Object is possibly 'null'.

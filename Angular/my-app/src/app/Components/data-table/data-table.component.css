@@ -3,14 +3,12 @@
 
 .status-pending {
   color: #856404;
-  background-color: #fff3cd; 
   font-weight: bold;
   border-radius: 4px;
 }
 
 .status-canceled {
   color: #721c24;
-  background-color: #f8d7da; 
   font-weight: bold;
   border-radius: 4px;
 }
@@ -19,4 +17,27 @@
   background-color: #008080ba; 
   font-weight: bold;
   border-radius: 4px;
+}
+
+
+.status-pending {
+  color: orange;
+  font-weight: bold;
+}
+.status-canceled {
+  color: red;
+  font-weight: bold;
+}
+.status-approved {
+  color: green;
+  font-weight: bold;
+}
+
+.h-search{
+  height: 60px;
+  width: 50%;
+  margin: auto;
+}
+.status-COMPLETED{
+  background-color:#00808024;
 }

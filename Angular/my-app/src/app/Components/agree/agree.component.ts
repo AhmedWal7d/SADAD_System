@@ -1,17 +1,19 @@
 import { Component, Input } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { CommonModule, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-agree',
   standalone: true,
-  imports: [],
+  imports: [NgIf,CommonModule],
   templateUrl: './agree.component.html',
   styleUrls: ['./agree.component.css']
 })
 export class AgreeComponent {
 
   @Input() recordId!: number;
+  @Input() record: any;
 
   private baseUrl = 'http://localhost:8080/api/sadad';
   private token = localStorage.getItem('token');
@@ -24,7 +26,7 @@ export class AgreeComponent {
   cancel() {
     this.loadingCancel = true;
     this.http.put(`${this.baseUrl}/${this.recordId}/cancel`, {}, {
-      headers: new HttpHeaders({
+      headers: new HttpHeaders({  
         'Authorization': `Bearer ${this.token}`
       })
     }).subscribe({

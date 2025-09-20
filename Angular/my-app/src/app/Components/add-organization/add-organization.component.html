@@ -1,333 +1,287 @@
-<p-dialog
-  header="Add Invoice"
-  [(visible)]="display"
-  [modal]="true"
-  [style]="{ width: '80vw' }"
->
+<div class="mt-4 mb-4 container-fluid">
+  <button class="btn btn-sm-crud" (click)="showDialog()">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+  </button>
+</div>
+
+<p-dialog header="Add / Update Invoice" [(visible)]="display" [modal]="true" [style]="{ width: '80vw' }">
   <form #invoiceForm="ngForm" (ngSubmit)="onSubmit(invoiceForm)">
     <div class="row">
+
+
+
+
+
+    
+
       <!-- Organization -->
-      <div class="col-md-4 mb-2">
-        <label for="organizationCode" class="form-label">Organization Code</label>
-        <select
-          id="organizationCode"
-          class="form-control form-control-sm h-40"
-          name="organizationCode"
-          [(ngModel)]="organization.organizationCode"
-          (change)="onOrganizationChange($event)"
-          required
-        >
+      <div class="col-md-4 mb-4">
+        <label class="form-label">Organization Code</label>
+        <select class="form-control form-control-sm h-40"
+                [(ngModel)]="organization.organizationCode"
+                name="organizationCode"
+                (change)="onOrganizationChange($event)"
+                required>
           <option value="">-- Select Organization --</option>
-          <option *ngFor="let org of organizations" [value]="org.organizationCode">
-            {{ org.organizationCode }}
-          </option>
+          <option *ngFor="let org of organizations" [value]="org.code">{{ org.code }}</option>
         </select>
       </div>
 
-      <div class="col-md-4 mb-2">
-        <label for="organizationName" class="form-label">Organization Name</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40"
-          id="organizationName"
-          name="organizationName"
-          [(ngModel)]="organization.organizationName"
-          readonly
-        />
+      <!-- Organization Name -->
+      <div class="col-md-4 mb-4">
+        <label class="form-label">Organization Name</label>
+        <input class="form-control form-control-sm h-40" [value]="organization.organizationName" readonly>
       </div>
 
-      <!-- Legal Entity -->
-      <div class="col-md-4 mb-2">
-        <label for="legalEntity" class="form-label">Legal Entity</label>
-        <select
-          id="legalEntity"
-          class="form-control form-control-sm h-40"
-          name="legalEntity"
-          [(ngModel)]="organization.legalEntity"
-          required
-        >
+      <div class="col-md-4 mb-4">
+        <label class="form-label">Legal Entity</label>
+        <select class="form-control form-control-sm h-40"
+                [(ngModel)]="organization.legalEntity"
+                name="legalEntity"
+                required>
           <option value="">-- Select Legal Entity --</option>
-          <option *ngFor="let le of legalEntities" [value]="le.code">
-            {{ le.name }}
-          </option>
+          <option *ngFor="let le of legalEntities" [value]="le.code">{{ le.code }}</option>
         </select>
       </div>
 
-      <!-- Remitter Bank -->
-      <div class="col-md-4 mb-2">
-        <label for="remitterBank" class="form-label">Remitter Bank</label>
-        <select
-          id="remitterBank"
-          class="form-control form-control-sm h-40"
-          name="remitterBank"
-          [(ngModel)]="organization.remitterBank"
-          (change)="onRemitterBankChange($event)"
-          required
-        >
-          <option value="">-- Select Bank --</option>
-          <option *ngFor="let bank of remitterBanks" [value]="bank.code">
-            {{ bank.name }}
-          </option>
-        </select>
-      </div>
-
-      <div class="col-md-4 mb-2">
-        <label for="remitterBankAccount" class="form-label">Remitter Bank Account</label>
-        <select
-          id="remitterBankAccount"
-          class="form-control form-control-sm h-40"
-          name="remitterBankAccount"
-          [(ngModel)]="organization.remitterBankAccount"
-          (change)="onAccountChange($event)"
-          required
-        >
-          <option value="">-- Select Account --</option>
-          <option *ngFor="let acc of remitterBankAccounts" [value]="acc.id">
-            {{ acc.accountNumber }}
-          </option>
-        </select>
-      </div>
-
-      <div class="col-md-4 mb-2">
-        <label for="remitterBankAccountName" class="form-label">Bank Account Name</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40"
-          id="remitterBankAccountName"
-          name="remitterBankAccountName"
-          [(ngModel)]="organization.remitterBankAccountName"
-          readonly
-        />
-      </div>
-
-      <!-- Biller -->
-      <div class="col-md-4 mb-2">
-        <label for="billerId" class="form-label">Biller ID</label>
-        <select
-          id="billerId"
-          class="form-control form-control-sm h-40"
-          name="billerId"
+  <!-- Biller -->
+<div class="col-md-4 mb-4">
+  <label class="form-label">Biller ID</label>
+  <select class="form-control form-control-sm h-40"
           [(ngModel)]="organization.billerId"
+          name="billerId"
           (change)="onBillerChange($event)"
-          required
-        >
-          <option value="">-- Select Biller --</option>
-          <option *ngFor="let biller of billers" [value]="biller.id">
-            {{ biller.id }}
-          </option>
-        </select>
-      </div>
+          required>
+    <option value="">-- Select Biller --</option>
+    <option *ngFor="let b of billers" [value]="b.code">{{ b.name }}</option>
+  </select>
+</div>
 
-      <div class="col-md-4 mb-2">
-        <label for="billerName" class="form-label">Biller Name</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40"
-          id="billerName"
-          name="billerName"
-          [(ngModel)]="organization.billerName"
-          readonly
-        />
+      <!-- Biller Name -->
+      <div class="col-md-4 mb-4">
+        <label class="form-label">Biller ID Name</label>
+        <input class="form-control form-control-sm h-40" [value]="organization.billerId" readonly>
       </div>
+      <div class="col-md-4 mb-4"> </div>
 
-      <!-- Vendor -->
-      <div class="col-md-4 mb-2">
-        <label for="vendorNumber" class="form-label">Vendor Number</label>
-        <select
-          id="vendorNumber"
-          class="form-control form-control-sm h-40"
-          name="vendorNumber"
+
+
+<!-- Vendor Number -->
+<div class="col-md-4 mb-4">
+  <label class="form-label">Vendor Number</label>
+  <select class="form-control form-control-sm h-40"
           [(ngModel)]="organization.vendorNumber"
+          name="vendorNumber"
           (change)="onVendorChange($event)"
-          required
-        >
-          <option value="">-- Select Vendor --</option>
-          <option *ngFor="let vendor of vendors" [value]="vendor.vendorNumber">
-            {{ vendor.vendorNumber }}
-          </option>
-        </select>
-      </div>
+          required>
+    <option value="">-- Select Vendor --</option>
+    <option *ngFor="let v of vendors" [value]="v.code">{{ v.code }}</option>
+  </select>
+</div>
 
-      <div class="col-md-4 mb-2">
-        <label for="vendorName" class="form-label">Vendor Name</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40"
-          id="vendorName"
-          name="vendorName"
-          [(ngModel)]="organization.vendorName"
-          readonly
-        />
-      </div>
+<!-- Vendor Name (auto-filled) -->
+<div class="col-md-4 mb-4">
+  <label class="form-label">Vendor Name</label>
+  <input class="form-control form-control-sm h-40"
+         [value]="organization.vendorName"
+         readonly>
+</div>
 
-      <div class="col-md-4 mb-2">
-        <label for="vendorSiteCode" class="form-label">Vendor Site Code</label>
-        <select
-          id="vendorSiteCode"
-          class="form-control form-control-sm h-40"
-          name="vendorSiteCode"
+<!-- Vendor Site -->
+<div class="col-md-4 mb-4">
+  <label class="form-label">Vendor Site Code</label>
+  <select class="form-control form-control-sm h-40"
           [(ngModel)]="organization.vendorSiteCode"
-        >
-          <option value="">-- Select Site --</option>
-          <option *ngFor="let site of vendorSites" [value]="site.code">
-            {{ site.code }}
-          </option>
-        </select>
-      </div>
+          name="vendorSiteCode"
+          required>
+    <option value="">-- Select Vendor Site --</option>
+    <option *ngFor="let site of vendorSites" [value]="site.code">{{ site.name }}</option>
+  </select>
+</div>
 
-      <!-- Invoice -->
-      <div class="col-md-4 mb-2">
-        <label for="invoiceType" class="form-label">Invoice Type</label>
-        <select
-          id="invoiceType"
-          class="form-control form-control-sm h-40"
-          name="invoiceType"
-          [(ngModel)]="organization.invoiceType"
-          required
-        >
+
+
+  
+
+
+
+
+
+
+
+<!-- Remitter Bank -->
+<div class="col-md-4 mb-4">
+  <label class="form-label">Remitter Bank</label>
+  <select class="form-control form-control-sm h-40"
+          [(ngModel)]="organization.remitterBank"
+          name="remitterBank"
+          (ngModelChange)="onRemitterBankChange($event)">
+    <option value="">-- Select Bank --</option>
+    <option *ngFor="let rb of remitterBanks" [value]="rb.code">{{ rb.name }}</option>
+  </select>
+</div>
+
+<!-- Remitter Bank Account -->
+<div class="col-md-4 mb-4">
+  <label class="form-label">Remitter Bank Account</label>
+  <select class="form-control form-control-sm h-40"
+          [(ngModel)]="organization.remitterBankAccount"
+          name="remitterBankAccount"
+          (ngModelChange)="onRemitterBankAccountChange($event)">
+    <option value="">-- Select Account --</option>
+    <option *ngFor="let rba of remitterBankAccounts" [value]="rba.code">{{ rba.code }}</option>
+  </select>
+</div>
+
+<!-- Remitter Bank Account Name -->
+<div class="col-md-4 mb-4">
+  <label class="form-label">Remitter Bank Account Name</label>
+  <input class="form-control form-control-sm h-40"
+         [value]="organization.remitterBankAccountName"
+         readonly>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <!-- Invoice Type -->
+      <div class="col-md-4 mb-4">
+        <label class="form-label">Invoice Type</label>
+        <select class="form-control form-control-sm h-40"
+                [(ngModel)]="organization.invoiceType"
+                name="invoiceType"
+                required>
           <option value="">-- Select Type --</option>
-          <option *ngFor="let type of invoiceTypes" [value]="type">
-            {{ type }}
-          </option>
+          <option *ngFor="let t of invoiceTypes" [value]="t">{{ t }}</option>
         </select>
       </div>
 
-      <div class="col-md-4 mb-2">
-        <label for="invoiceNumber" class="form-label">Invoice Number</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40"
-          id="invoiceNumber"
-          name="invoiceNumber"
-          [(ngModel)]="organization.invoiceNumber"
-          required
-        />
+      <!-- Invoice Number -->
+      <div class="col-md-4 mb-4">
+        <label class="form-label">Invoice Number</label>
+        <input class="form-control form-control-sm h-40"
+               [(ngModel)]="organization.invoiceNumber"
+               name="invoiceNumber"
+               required>
       </div>
 
-      <div class="col-md-4 mb-2">
-        <label for="subscriptionAccountNumber" class="form-label">Subscription Account</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40"
-          id="subscriptionAccountNumber"
-          name="subscriptionAccountNumber"
-          [(ngModel)]="organization.subscriptionAccountNumber"
-          required
-        />
+      <!-- Subscription Account -->
+      <div class="col-md-4 mb-4">
+        <label class="form-label">Subscription Account</label>
+        <input class="form-control form-control-sm h-40"
+               [(ngModel)]="organization.subscriptionAccountNumber"
+               name="subscriptionAccountNumber"
+               required>
       </div>
 
-      <div class="col-md-4 mb-2">
-        <label for="amount" class="form-label">Amount</label>
-        <input
-          type="number"
-          class="form-control form-control-sm h-40"
-          id="amount"
-          name="amount"
-          [(ngModel)]="organization.amount"
-          required
-        />
+      <!-- Amount -->
+      <div class="col-md-4 mb-4">
+        <label class="form-label">Amount</label>
+        <input type="number" class="form-control form-control-sm h-40"
+               [(ngModel)]="organization.amount"
+               name="amount"
+               required>
       </div>
 
-      <!-- Expense -->
-      <div class="col-md-4 mb-2">
-        <label for="expenseAccountCode" class="form-label">Expense Account Code</label>
-        <select
-          id="expenseAccountCode"
-          class="form-control form-control-sm h-40"
-          name="expenseAccountCode"
-          [(ngModel)]="organization.expenseAccountCode"
-          (change)="onExpenseChange($event)"
-          required
-        >
+      <!-- Expense Account -->
+      <div class="col-md-4 mb-4">
+        <label class="form-label">Expense Account Code </label>
+        <select class="form-control form-control-sm h-40"
+                [(ngModel)]="organization.expenseAccountCode"
+                name="expenseAccountCode"
+                (change)="onGenericSelect($event, expenseAccounts, 'expenseAccountCode', 'expenseAccountName')"
+                required>
           <option value="">-- Select Expense --</option>
-          <option *ngFor="let exp of expenseAccounts" [value]="exp.code">
-            {{ exp.code }}
-          </option>
+          <option *ngFor="let e of expenseAccounts" [value]="e.code">{{ e.code }}</option>
         </select>
       </div>
 
-      <div class="col-md-4 mb-2">
-        <label for="expenseAccountName" class="form-label">Expense Account Name</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40"
-          id="expenseAccountName"
-          name="expenseAccountName"
-          [(ngModel)]="organization.expenseAccountName"
-          readonly
-        />
+      <!-- Expense Account Name -->
+      <div class="col-md-4 mb-4">
+        <label class="form-label">Expense Account Name</label>
+        <input class="form-control form-control-sm h-40" [value]="organization.expenseAccountName" readonly>
       </div>
 
       <!-- Business -->
-      <div class="col-md-4 mb-2">
-        <label for="businessCode" class="form-label">Business Code</label>
-        <select
-          id="businessCode"
-          class="form-control form-control-sm h-40"
-          name="businessCode"
-          [(ngModel)]="organization.businessCode"
-          (change)="onBusinessChange($event)"
-          required
-        >
+      <div class="col-md-4 mb-4">
+        <label class="form-label">Business Code</label>
+        <select class="form-control form-control-sm h-40"
+                [(ngModel)]="organization.businessCode"
+                name="businessCode"
+                (change)="onGenericSelect($event, businesses, 'businessCode', 'businessName')"
+                required>
           <option value="">-- Select Business --</option>
-          <option *ngFor="let bus of businesses" [value]="bus.code">
-            {{ bus.code }}
-          </option>
+          <option *ngFor="let b of businesses" [value]="b.code">{{ b.code }}</option>
         </select>
       </div>
 
-      <div class="col-md-4 mb-2">
-        <label for="businessName" class="form-label">Business Name</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40"
-          id="businessName"
-          name="businessName"
-          [(ngModel)]="organization.businessName"
-          readonly
-        />
+      <!-- Business Name -->
+      <div class="col-md-4 mb-4">
+        <label class="form-label">Business Name</label>
+        <input class="form-control form-control-sm h-40" [value]="organization.businessName" readonly>
       </div>
 
       <!-- Location -->
-      <div class="col-md-4 mb-2">
-        <label for="locationCode" class="form-label">Location Code</label>
-        <select
-          id="locationCode"
-          class="form-control form-control-sm h-40"
-          name="locationCode"
-          [(ngModel)]="organization.locationCode"
-          (change)="onLocationChange($event)"
-          required
-        >
+      <div class="col-md-4 mb-4">
+        <label class="form-label">Location Code</label>
+        <select class="form-control form-control-sm h-40"
+                [(ngModel)]="organization.locationCode"
+                name="locationCode"
+                (change)="onGenericSelect($event, locations, 'locationCode', 'locationName')"
+                required>
           <option value="">-- Select Location --</option>
-          <option *ngFor="let loc of locations" [value]="loc.code">
-            {{ loc.code }}
-          </option>
+          <option *ngFor="let l of locations" [value]="l.code">{{ l.code }}</option>
         </select>
       </div>
 
-      <div class="col-md-4 mb-2">
-        <label for="locationName" class="form-label">Location Name</label>
-        <input
-          type="text"
-          class="form-control form-control-sm h-40"
-          id="locationName"
-          name="locationName"
-          [(ngModel)]="organization.locationName"
-          readonly
-        />
+      <!-- Location Name -->
+      <div class="col-md-4 mb-4">
+        <label class="form-label">Location Name</label>
+        <input class="form-control form-control-sm h-40" [value]="organization.locationName" readonly>
       </div>
-    </div>
 
-    <!-- Submit Button -->
-    <button type="submit" [disabled]="isLoading" class="btn btn-teal mt-3">
-      <span
-        *ngIf="isLoading"
-        class="spinner-border spinner-border-sm me-2"
-        role="status"
-        aria-hidden="true"
-      ></span>
-      Save
-    </button>
+      <!-- Cost Centers -->
+      <div class="col-md-12 mb-2">
+        <label class="form-label">Cost Centers</label>
+        <div *ngFor="let cc of organization.costCenters; let i = index" class="d-flex mb-2">
+          <select class="form-control form-control-sm me-2"
+                  [(ngModel)]="cc.costCenterCode"
+                  name="costCenterCode{{i}}"
+                  (change)="onCostCenterChange($event, i)"
+                  required>
+            <option value="">-- Select Cost Center --</option>
+            <option *ngFor="let c of costCenters" [value]="c.code">{{ c.name }}</option>
+          </select>
+          <input type="text" class="form-control form-control-sm me-2" [value]="cc.costCenterDesc" readonly>
+          <input type="number" class="form-control form-control-sm me-2"
+                 [(ngModel)]="cc.percentage"
+                 name="percentage{{i}}"
+                 placeholder="%"
+                 required />
+          <button type="button" class="btn btn-danger btn-sm" (click)="organization.costCenters.splice(i,1)">X</button>
+        </div>
+
+        <button type="button" class="btn btn-sm btn-primary"
+                (click)="organization.costCenters.push({costCenterCode:'', costCenterDesc:'', percentage:0})">
+          + Add Cost Center
+        </button>
+      </div>
+ 
+    </div>  
+
+    <div class="mt-4 text-end">
+      <button type="submit" class="btn btn-success btn-sm" [disabled]="isLoading">
+        {{ isLoading ? 'Saving...' : 'Save' }}
+      </button>
+    </div>
   </form>
 </p-dialog>

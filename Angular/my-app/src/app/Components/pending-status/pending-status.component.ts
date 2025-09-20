@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class PendingStatusComponent {
   @Input() recordId!: number;  
+  @Input() record: any;
   constructor(private http: HttpClient, private toastr: ToastrService) {}
   displayDialog: boolean = false;
 

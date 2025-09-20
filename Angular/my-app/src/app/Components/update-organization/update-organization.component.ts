@@ -13,15 +13,13 @@ import axios, { AxiosError } from 'axios';
   styleUrls: ['./update-organization.component.css']
 })
 export class UpdateOrganizationComponent implements OnChanges {
-
   display: boolean = false;
   isLoading = false;
-  organizations: any[] = [];
+    @Input() record: any;
 
   @Input() recordId!: number;
 
   formData: any = {
-    id: null,
     organizationCode: '',
     organizationName: '',
     legalEntity: '',
@@ -42,39 +40,16 @@ export class UpdateOrganizationComponent implements OnChanges {
     businessCode: '',
     businessName: '',
     locationCode: '',
-    locationName: '',
-    status: '',
-    createdByUsername: '',
-    createdAt: '',
-    updatedAt: ''
+    locationName: ''
   };
 
   private apiUrl = 'http://localhost:8080/api/sadad';
 
   constructor(private toastr: ToastrService) {}
 
-  async ngOnInit() {
-    await this.loadOrganizations();
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['recordId'] && this.recordId) {
       this.fetchRecord();
-    }
-  }
-
-  // ===============================
-  // 🔹 API Calls
-  // ===============================
-  private async loadOrganizations() {
-    try {
-      const token = localStorage.getItem('token');
-      const res = await axios.get(this.apiUrl, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      this.organizations = res?.data || [];
-    } catch (err) {
-      this.handleError(err, 'Failed to fetch organizations');
     }
   }
 
@@ -94,7 +69,6 @@ export class UpdateOrganizationComponent implements OnChanges {
   async onSubmit(form: NgForm) {
     if (form.invalid) {
       this.toastr.warning('Please fill all required fields', 'Validation Error');
-      console.warn('Form is invalid', form.form.value);
       return;
     }
 
@@ -111,6 +85,7 @@ export class UpdateOrganizationComponent implements OnChanges {
       this.toastr.success('Updated Successfully ✅', 'Success');
       this.display = false;
       form.resetForm();
+      this.resetForm();
     } catch (err) {
       this.handleError(err, 'Update failed');
     } finally {
@@ -118,31 +93,12 @@ export class UpdateOrganizationComponent implements OnChanges {
     }
   }
 
-  async onOrganizationChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const id = selectElement.value;
-
-    if (!id) return;
-
-    if (id === 'new') {
-      this.resetForm();
-      return;
-    }
-
-    this.recordId = +id;
-    await this.fetchRecord();
-  }
-
   showDialog() {
     this.display = true;
   }
 
-  // ===============================
-  // 🔹 Helpers
-  // ===============================
   private resetForm() {
     this.formData = {
-      id: null,
       organizationCode: '',
       organizationName: '',
       legalEntity: '',
@@ -163,11 +119,7 @@ export class UpdateOrganizationComponent implements OnChanges {
       businessCode: '',
       businessName: '',
       locationCode: '',
-      locationName: '',
-      status: '',
-      createdByUsername: '',
-      createdAt: '',
-      updatedAt: ''
+      locationName: ''
     };
   }
 
