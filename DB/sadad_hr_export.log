@@ -1,0 +1,47 @@
+;;; 
+Export: Release 19.0.0.0.0 - Production on Sat Sep 20 16:41:24 2025
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
+;;; 
+Connected to: Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Starting "SADAD_HR"."SYS_EXPORT_SCHEMA_01":  SADAD_HR/********@localhost:1521/orclpdb directory=EXPORT_DIR dumpfile=sadad_hr_export.dmp logfile=sadad_hr_export.log schemas=SADAD_HR 
+Processing object type SCHEMA_EXPORT/TABLE/TABLE_DATA
+Processing object type SCHEMA_EXPORT/TABLE/INDEX/STATISTICS/INDEX_STATISTICS
+Processing object type SCHEMA_EXPORT/TABLE/STATISTICS/TABLE_STATISTICS
+Processing object type SCHEMA_EXPORT/STATISTICS/MARKER
+Processing object type SCHEMA_EXPORT/PRE_SCHEMA/PROCACT_SCHEMA
+Processing object type SCHEMA_EXPORT/SEQUENCE/SEQUENCE
+Processing object type SCHEMA_EXPORT/TABLE/TABLE
+Processing object type SCHEMA_EXPORT/TABLE/COMMENT
+Processing object type SCHEMA_EXPORT/TABLE/IDENTITY_COLUMN
+Processing object type SCHEMA_EXPORT/TABLE/INDEX/INDEX
+Processing object type SCHEMA_EXPORT/TABLE/CONSTRAINT/CONSTRAINT
+Processing object type SCHEMA_EXPORT/TABLE/CONSTRAINT/REF_CONSTRAINT
+. . exported "SADAD_HR"."SADAD_RECORDS"                  21.01 KB      19 rows
+. . exported "SADAD_HR"."REMITTER_BANK_ACCOUNT"          7.773 KB      10 rows
+. . exported "SADAD_HR"."REMITTER_BANK"                  7.429 KB      14 rows
+. . exported "SADAD_HR"."USERS"                          7.140 KB      12 rows
+. . exported "SADAD_HR"."COST_CENTERS"                   7.265 KB      14 rows
+. . exported "SADAD_HR"."ORGANIZATIONS"                  7.140 KB       5 rows
+. . exported "SADAD_HR"."SADAD_ORGANIZATION"             7.062 KB       7 rows
+. . exported "SADAD_HR"."SADAD_RECORD_COST_CENTERS"      6.648 KB       6 rows
+. . exported "SADAD_HR"."ORG_REMITTER_ACCOUNT"           6.601 KB       8 rows
+. . exported "SADAD_HR"."LEGAL_ENTITY"                   6.406 KB       1 rows
+. . exported "SADAD_HR"."VENDORS"                        6.039 KB       4 rows
+. . exported "SADAD_HR"."SUPPLIERS"                      6.015 KB       2 rows
+. . exported "SADAD_HR"."REMITTER_BANKS"                 5.992 KB       1 rows
+. . exported "SADAD_HR"."EXPENSE"                        5.992 KB       1 rows
+. . exported "SADAD_HR"."BILLER"                         5.992 KB       1 rows
+. . exported "SADAD_HR"."ROLES"                          5.656 KB       8 rows
+. . exported "SADAD_HR"."BILLERS"                        5.593 KB       3 rows
+. . exported "SADAD_HR"."USER_ROLES"                     5.687 KB      12 rows
+. . exported "SADAD_HR"."VENDOR_SITES"                   5.578 KB       4 rows
+. . exported "SADAD_HR"."LOCATIONS"                      5.562 KB       2 rows
+. . exported "SADAD_HR"."EXPENSE_ACCOUNTS"               5.539 KB       1 rows
+. . exported "SADAD_HR"."BUSINESS_UNITS"                 5.546 KB       1 rows
+Master table "SADAD_HR"."SYS_EXPORT_SCHEMA_01" successfully loaded/unloaded
+******************************************************************************
+Dump file set for SADAD_HR.SYS_EXPORT_SCHEMA_01 is:
+  D:\ORACLE_EXPORTS\SADAD_HR_EXPORT.DMP
+Job "SADAD_HR"."SYS_EXPORT_SCHEMA_01" successfully completed at Sat Sep 20 16:41:50 2025 elapsed 0 00:00:26
